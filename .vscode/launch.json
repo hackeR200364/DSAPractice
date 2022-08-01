@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "e:/Placement/DSA",
-      "program": "e:/Placement/DSA/build/Debug/outDebug",
+      "cwd": "e:/Placement",
+      "program": "e:/Placement/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
