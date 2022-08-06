@@ -13,9 +13,12 @@ int main()
     int a = 2;
     int b = 4;
 
-    int *aptr = &a;
-    int *bptr = &b;
+    // int *aptr = &a;
+    // int *bptr = &b;
+    // swap(aptr, bptr);
 
-    swap(aptr, bptr);
+    // WE CAN ALSO SEND ONLY THE ADDRESS OF THR VARIABLES
+    swap(&a, &b);
+
     cout << a << " " << b << endl;
 }
