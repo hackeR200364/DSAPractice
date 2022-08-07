@@ -1,3 +1,2 @@
-    // string str;
-    // cin >> str;
-    // cout << str << endl;
+    // cin >> n;
+    // cout << sum(n) << endl;
