@@ -24,11 +24,10 @@ public:
     }
 
     // FOR DECLARING A OBJECT OF A CLASS AT THE INITIALIZATION
-    // PARAMETERISED CONSTRUCTOR
     student(string s)
     {
         name = s;
-    }
+    } // PARAMETERISED CONSTRUCTOR
 
     void printInfo()
     {
