@@ -752,13 +752,13 @@ int main()
     int arr[] = {1, 2, 3, 4, 5, 6};
     for (int i = 0; i < 6; i++)
     {
-        insertAtTailCircular(head9, arr[i]);
+        insertAtTail(head9, arr[i]);
     }
     cout << "Head9 = ";
-    displayCircular(head9);
+    diaplay(head9);
     evenAfterOdd(head9);
     cout << "Even nodes after odd nodes" << endl;
-    displayCircular(head9);
+    diaplay(head9);
 
     return 0;
 }
