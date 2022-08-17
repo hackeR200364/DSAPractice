@@ -73,7 +73,7 @@ int pop()
     else
     {
         num = s.stk[s.top];
-        printf("\nPoped element is = %dn", s.stk[s.top]);
+        printf("\nPoped element is = %d\n", s.stk[s.top]);
         s.top = s.top - 1;
     }
     return (num);
