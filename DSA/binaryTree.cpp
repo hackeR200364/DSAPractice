@@ -257,6 +257,220 @@ int calcuDiameterOpt(Node *root, int *height)
     return max(currDiameter, max(lDiameter, rDiameter));
 }
 
+void sumReplace(Node *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    sumReplace(root->left);
+    sumReplace(root->right);
+
+    if (root->left != NULL)
+    {
+        root->data += root->left->data;
+    }
+
+    if (root->right != NULL)
+    {
+        root->data += root->right->data;
+    }
+}
+
+bool isBalanced(Node *root)
+{
+    if (root == NULL)
+    {
+        return true;
+    }
+
+    if (isBalanced(root->left) == false)
+    {
+        return false;
+    }
+
+    if (isBalanced(root->right) == false)
+    {
+        return false;
+    }
+
+    int lh = calcuHeight(root->left);
+    int rh = calcuHeight(root->right);
+
+    if (abs(lh - rh) <= 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool isBalanced2(Node *root, int *height)
+{
+    if (root == NULL)
+    {
+        return true;
+    }
+
+    int lh = 0, rh = 0;
+    if (isBalanced2(root->left, &lh) == false)
+    {
+        return false;
+    }
+
+    if (isBalanced2(root->right, &rh) == false)
+    {
+        return false;
+    }
+
+    *height = max(lh, rh) + 1;
+    if (abs(lh - rh) <= 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void rightView(Node *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    queue<Node *> q;
+    q.push(root);
+
+    while (!q.empty())
+    {
+        int n = q.size();
+        for (int i = 0; i < n; i++)
+        {
+            Node *curr = q.front();
+            q.pop();
+
+            if (i == (n - 1))
+            {
+                cout << curr->data << " ";
+            }
+
+            if (curr->left != NULL)
+            {
+                q.push(curr->left);
+            }
+
+            if (curr->right != NULL)
+            {
+                q.push(curr->right);
+            }
+        }
+    }
+}
+
+void leftView(Node *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    queue<Node *> q;
+    q.push(root);
+
+    while (!q.empty())
+    {
+        int n = q.size();
+        for (int i = 0; i < n; i++)
+        {
+            Node *curr = q.front();
+            q.pop();
+
+            if (i == (n - 1))
+            {
+                cout << curr->data << " ";
+            }
+
+            if (curr->right != NULL)
+            {
+                q.push(curr->right);
+            }
+
+            if (curr->left != NULL)
+            {
+                q.push(curr->left);
+            }
+        }
+    }
+}
+
+Node *LCA(Node *root, int n1, int n2)
+{
+    if (root == NULL)
+    {
+        return NULL;
+    }
+
+    if (root->data == n1 || root->data == n2)
+    {
+        return root;
+    }
+
+    Node *left = LCA(root->left, n1, n2);
+    Node *right = LCA(root->right, n1, n2);
+
+    if (left != NULL && right != NULL)
+    {
+        return root;
+    }
+
+    if (left == NULL && right == NULL)
+    {
+        return NULL;
+    }
+
+    if (left != NULL)
+    {
+        return LCA(root->left, n1, n2);
+    }
+    return LCA(root->right, n1, n2);
+}
+
+int findDist(Node *root, int k, int dist)
+{
+    if (root == NULL)
+    {
+        return -1;
+    }
+
+    if (root->data == k)
+    {
+        return dist;
+    }
+
+    int left = findDist(root->left, k, (dist + 1));
+    if (left != -1)
+    {
+        return left;
+    }
+    return findDist(root->right, k, (dist + 1));
+}
+
+int distBtwNodes(Node *root, int n1, int n2)
+{
+    Node *lca = LCA(root, n1, n2);
+
+    int d1 = findDist(lca, n1, 0);
+    int d2 = findDist(lca, n2, 0);
+
+    return (d1 + d2);
+}
+
 int main()
 {
 
@@ -312,21 +526,6 @@ int main()
     postOrder(root2);
     cout << endl;
 
-    // int preorder[] = {1,
-    //                   2,
-    //                   4,
-    //                   5,
-    //                   3,
-    //                   6,
-    //                   7};
-    // int inorder[] = {4,
-    //                  2,
-    //                  5,
-    //                  1,
-    //                  6,
-    //                  3,
-    //                  7};
-
     int preorder1[] = {1, 2, 4, 3, 5};
     int inorder1[] = {4, 2, 1, 5, 3};
     int postorder[] = {4, 2, 5, 3, 1};
@@ -357,6 +556,48 @@ int main()
 
     int height = 0;
     cout << "Diameter From Optimised = " << calcuDiameterOpt(root2, &height) << endl;
+
+    cout << "Root2 = ";
+    preOrder(root2);
+    cout << endl;
+    // sumReplace(root2);
+    // cout << "Root2 after Sum Replace = ";
+    // preOrder(root2);
+    // cout << endl;
+
+    cout << "Root2 is : ";
+    cout << (isBalanced(root2) ? "Balanced" : "UnBalanced") << endl;
+    Node *root5 = new Node(1);
+    root5->left = new Node(2);
+    root5->left->left = new Node(3);
+    cout << "Root5 is : ";
+    cout << (isBalanced(root5) ? "Balanced" : "UnBalanced") << endl;
+
+    int height2 = 0;
+    cout << "Opt Root2 is : ";
+    cout << (isBalanced2(root2, &height2) ? "Balanced" : "UnBalanced") << endl;
+    cout << "Opt Root5 is : ";
+    cout << (isBalanced2(root5, &height2) ? "Balanced" : "UnBalanced") << endl;
+
+    cout << "Right View = ";
+    rightView(root2);
+    cout << endl;
+
+    Node *root6 = new Node(5);
+    root6->left = new Node(3);
+    root6->right = new Node(6);
+    root6->left->left = new Node(2);
+    root6->left->right = new Node(4);
+    cout << "Left View = ";
+    leftView(root6);
+    cout << endl;
+
+    Node *root7 = new Node(1);
+    root7->left = new Node(2);
+    root7->right = new Node(3);
+    root7->left->left = new Node(4);
+    root7->right->right = new Node(5);
+    cout << "Distance Btw Nodes = " << distBtwNodes(root7, 4, 5) << endl;
 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
