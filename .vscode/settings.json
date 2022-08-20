@@ -36,6 +36,7 @@
     "deque": "cpp",
     "forward_list": "cpp",
     "list": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "iomanip": "cpp"
   }
 }
