@@ -471,6 +471,33 @@ int distBtwNodes(Node *root, int n1, int n2)
     return (d1 + d2);
 }
 
+void flatten(Node *root)
+{
+    if (root == NULL || (root->left == NULL && root->right == NULL))
+    {
+        return;
+    }
+
+    if (root->left != NULL)
+    {
+        flatten(root->left);
+
+        Node *temp = root->right;
+        root->right = root->left;
+        root->left = NULL;
+
+        Node *t = root->right;
+        while (t->right != NULL)
+        {
+            t = t->right;
+        }
+        t->right = temp;
+    }
+    flatten(root->right);
+}
+
+
+
 int main()
 {
 
@@ -598,6 +625,17 @@ int main()
     root7->left->left = new Node(4);
     root7->right->right = new Node(5);
     cout << "Distance Btw Nodes = " << distBtwNodes(root7, 4, 5) << endl;
+
+    Node *root8 = new Node(4);
+    root8->left = new Node(9);
+    root8->right = new Node(5);
+    root8->left->left = new Node(1);
+    root8->left->right = new Node(3);
+    root8->right->right = new Node(6);
+    flatten(root8);
+    cout << "Flatten root2 = ";
+    inOrder(root8);
+    cout << endl;
 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
