@@ -38,6 +38,7 @@
     "list": "cpp",
     "vector": "cpp",
     "iomanip": "cpp",
-    "chrono": "cpp"
+    "chrono": "cpp",
+    "new": "cpp"
   }
 }

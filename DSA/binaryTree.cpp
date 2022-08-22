@@ -1,6 +1,9 @@
 #include <iostream>
 #include <queue>
+#include <vector>
 #include <chrono>
+#include <climits>
+
 using namespace std;
 using namespace std::chrono;
 
@@ -496,7 +499,163 @@ void flatten(Node *root)
     flatten(root->right);
 }
 
+void printSubTreeNodesCaseI(Node *root, int k)
+{
+    if (root == NULL or k < 0)
+    {
+        return;
+    }
 
+    if (k == 0)
+    {
+        cout << root->data << " ";
+        return;
+    }
+
+    printSubTreeNodesCaseI(root->left, k - 1);
+    printSubTreeNodesCaseI(root->right, k - 1);
+}
+
+int printNodesAtk(Node *root, Node *target, int k)
+{
+    if (root == NULL)
+    {
+        return -1;
+    }
+
+    if (root == target)
+    {
+        printSubTreeNodesCaseI(root, k);
+        return 0;
+    }
+
+    int dl = printNodesAtk(root->left, target, k);
+    if (dl != -1)
+    {
+        if (dl + 1 == k)
+        {
+            cout << root->data << " ";
+        }
+        else
+        {
+            printSubTreeNodesCaseI(root->right, k - dl - 2);
+        }
+        return (1 + dl);
+    }
+
+    int dr = printNodesAtk(root->right, target, k);
+    if (dr != -1)
+    {
+        if (dr + 1 == k)
+        {
+            cout << root->data << " ";
+        }
+        else
+        {
+            printSubTreeNodesCaseI(root->left, k - dr - 2);
+        }
+        return (1 + dr);
+    }
+
+    return -1;
+}
+
+bool getPath(Node *root, int key, vector<int> &path)
+{
+    if (root == NULL)
+    {
+        return false;
+    }
+
+    path.push_back(root->data);
+    if (root->data == key)
+    {
+        return true;
+    }
+
+    if (getPath(root->left, key, path) or getPath(root->right, key, path))
+    {
+        return true;
+    }
+
+    path.pop_back();
+    return false;
+}
+
+int lowestCommonA(Node *root, int n1, int n2)
+{
+    vector<int> path1, path2;
+
+    if (!getPath(root, n1, path1) or !getPath(root, n2, path2))
+    {
+        return -1;
+    }
+
+    int pc;
+    for (pc = 0; pc < path1.size() && path2.size(); pc++)
+    {
+        if (path1[pc] != path2[pc])
+        {
+            break;
+        }
+    }
+
+    return path1[pc - 1];
+}
+
+Node *lowestCommonA2(Node *root, int n2, int n1)
+{
+    if (root == NULL)
+    {
+        return NULL;
+    }
+
+    if (root->data == n1 or root->data == n2)
+    {
+        return root;
+    }
+
+    Node *leftLCA = lowestCommonA2(root->left, n2, n1);
+    Node *rightLCA = lowestCommonA2(root->right, n2, n1);
+
+    if (leftLCA && rightLCA)
+    {
+        return root;
+    }
+
+    if (leftLCA != NULL)
+    {
+        return leftLCA;
+    }
+
+    return rightLCA;
+}
+
+int maxPathSumUtil(Node *root, int &ans)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+
+    int left = maxPathSumUtil(root->left, ans);
+    int right = maxPathSumUtil(root->right, ans);
+
+    int nodeMax = max(max(root->data, root->data + left + right), max(root->data + left, root->data + right));
+
+    ans = max(ans, nodeMax);
+
+    int singlePathSum = max(root->data, max(root->data + left, root->data + right));
+
+    return singlePathSum;
+}
+
+int maxPathSum(Node *root)
+{
+    int ans = INT_MIN;
+    maxPathSumUtil(root, ans);
+    return ans;
+}
 
 int main()
 {
@@ -636,6 +795,47 @@ int main()
     cout << "Flatten root2 = ";
     inOrder(root8);
     cout << endl;
+
+    Node *root9 = new Node(1);
+    root9->left = new Node(2);
+    root9->right = new Node(3);
+    root9->left->left = new Node(4);
+    cout << "Dist at K " << printNodesAtk(root9, root9->left, 1) << endl;
+
+    Node *root10 = new Node(1);
+    root10->left = new Node(2);
+    root10->right = new Node(3);
+    root10->left->left = new Node(4);
+    root10->right->left = new Node(5);
+    root10->right->right = new Node(6);
+    root10->right->left->left = new Node(7);
+    int n1 = 7, n2 = 6;
+    int lca = lowestCommonA(root10, n1, n2);
+    if (lca == -1)
+    {
+        cout << "Doesn't exist" << endl;
+    }
+    else
+    {
+        cout << "Exist : " << lca << endl;
+    }
+
+    Node *lca2 = lowestCommonA2(root10, n1, n2);
+    if (lca2 == NULL)
+    {
+        cout << "Doesn't exist" << endl;
+    }
+    else
+    {
+        cout << "Exist : " << lca2->data << endl;
+    }
+
+    Node *root11 = new Node(1);
+    root11->left == new Node(2);
+    root11->right == new Node(3);
+    root11->left->left == new Node(4);
+    root11->right->right == new Node(5);
+    cout << "Max Path Sum = " << maxPathSum(root11) << endl;
 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
