@@ -39,6 +39,7 @@
     "vector": "cpp",
     "iomanip": "cpp",
     "chrono": "cpp",
-    "new": "cpp"
+    "new": "cpp",
+    "*.tcc": "c"
   }
 }
